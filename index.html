@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=, initial-scale=1.0" />
+    <title>Vue JS Todo App</title>
+  </head>
+  <body>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        padding: 20px;
+      }
+      input[type="text"] {
+        padding: 8px;
+        width: 250px;
+      }
+      button {
+        padding: 6px 10px;
+        margin-left: 5px;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      li {
+        padding: 8px 0;
+        display: flex;
+        align-items: center;
+      }
+      li.completed span {
+        text-decoration: line-through;
+        color: grey;
+      }
+    </style>
+
+    <div id="app">
+      <h2>Todo App</h2>
+      <input
+        v-model="newTodo"
+        type="text"
+        @keyup.enter="addTodo"
+        placeholder="Enter a task"
+      />
+      <button @click="addTodo">Add</button>
+      <ul>
+        <li
+          v-for="(todo, index) in todos"
+          :key="index"
+          :class="{completed: todo.done}"
+        >
+          <input type="checkbox" v-model="todo.done" /><span>{{todo.text}}</span
+          ><button @click="removeTodo(index)">Delete</button>
+        </li>
+      </ul>
+    </div>
+
+    <script type="module">
+      import {
+        createApp,
+        ref,
+      } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
+
+      createApp({
+        setup() {
+          const newTodo = ref("");
+          const todos = ref([]);
+
+          const addTodo = () => {
+            if (newTodo.value.trim()) {
+              todos.value.push({ text: newTodo.value.trim(), done: false });
+              newTodo.value = "";
+            }
+          };
+          const removeTodo = (index) => {
+            todos.value.splice(index, 1);
+          };
+          return { newTodo, todos, addTodo, removeTodo };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
